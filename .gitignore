@@ -3,7 +3,7 @@
 [Oo]bj/
 # [Bb]uild/
 Build/
-[Bb]uilds/
+# [Bb]uilds/
 [Ll]ogs/
 
 # Never ignore Asset meta data
