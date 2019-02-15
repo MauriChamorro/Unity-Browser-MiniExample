@@ -112,7 +112,7 @@ window.gameInstance.SendMessage("Bird", "DoFlap", 1);
 
 ## Prueba el juego
 
-[Aquí](https://maurichamorro.github.io/UnityWebGLInteractBrowserTest/) podrás probar el juego.
+[Aquí](https://maurichamorro.github.io/Unity-Browser-MiniExample/) podrás probar el juego.
 
 El _bóton html_ **Flap** es el que realizar la llamada desde _JS a Unity_.
 
