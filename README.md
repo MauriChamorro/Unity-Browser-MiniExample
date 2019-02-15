@@ -1,37 +1,38 @@
-# Communicating between Unity and the Browser - *Flappy Bird Style Example Game*
+# Communicating between Unity and the Browser
 
 ## Introducción
-El objetivo fue realizar un mini juego en [**WebAssembly**](https://blogs.unity3d.com/2018/08/15/webassembly-is-here/) y lograr la comunicación entre **Unity** y **JavaScript** a modo de aprendizaje para futuras aplicaciones. El juego prototipo fue obtenido desde [Asset Store](https://assetstore.unity.com/packages/templates/flappy-bird-style-example-game-80330) de Unity.
+
+El objetivo fue experimentar con [**WebAssembly**](https://blogs.unity3d.com/2018/08/15/webassembly-is-here/) y lograr la comunicación entre **Unity** y **JavaScript** a modo de aprendizaje para futuras aplicaciones.
+
+Para ello se utilizó un juego completo simple [_Flappy Bird Style Example Game_](https://assetstore.unity.com/packages/templates/flappy-bird-style-example-game-80330) desde el Asset Store de Unity.
 
 ## Unity hacia JS
-Para lograr esta comunicación se debe crear una caarpeta **Assets/Plugins** y destro de esta un **archivo.jslib**. 
+
+Para lograr esta comunicación se debe crear una carpeta **Assets/Plugins** y destro de esta un **archivo.jslib** que contrendrá el código JS como libreria.
 
 Todo el código JS debe estar contendido dentro de una firma tal como:
+
 ```javascript
 mergeInto(LibraryManager.library, {
   // code
   }
 ```
 
-Dentro de esta bloque se declara **Etiquetas:**  y su código JS asociado. Estas etiquetas seran la *firma externa* de la libreria JS.
+Dentro del bloque se declara _Etiquetas:_ y su código JS asociado. Estas etiquetas seran la _firma externa_ de la libreria JS.
 
-Dentro de dicho bloque se declaran las funciones JS y su lógica.
-```javascript 
+```javascript
 mergeInto(LibraryManager.library, {
-
+    //tag: js function
   JS_BirdDied: function () {
-    //first instance
     var body = document.getElementsByTagName("body")[0];
     body.style.transition = "1s all";
     body.style.background = "red";
-  }, 
+  },
   ....
 }
 ```
 
-Por último se llama desde Unity:
-
-Dentro de una **clase C#** declaramos una *variable* como acceso al método JS: 
+Por último se llama desde Unity por ualquier **clase C#**. Para ello declaramos una _variable_ como acceso a la etiqueta externa JS previamente definida:
 
 ```c#
  #region JS_IMPORT
@@ -40,8 +41,11 @@ Dentro de una **clase C#** declaramos una *variable* como acceso al método JS:
     public static extern void JS_BirdDied();
  #endregion
 ```
-Luego ya podemos utilizarla en cualquier parte del código C#, como por ejemplo:
+
+Con esto ya es posible utilizarla en cualquier parte del código C# _\*dentro de la clase donde se declaro la **variable**_, como por ejemplo:
+
 ```c#
+    //C# method
     public void BirdDied()
 	{
 		//Activate the game over text.
@@ -51,59 +55,77 @@ Luego ya podemos utilizarla en cualquier parte del código C#, como por ejemplo:
 
 		if (Application.platform == RuntimePlatform.WebGLPlayer)
 		{
-                //JS method
+                  //JS method
 		  JS_BirdDied();
-		}	
+		}
 	}
 ```
-## JS hacia Unity
-A modo de simplicidad, se hace global la variable de *gameInstance*:
 
-```html
-window.gameInstance = UnityLoader.instantiate("gameContainer", "Build/Build.json", {
-        onProgress: UnityProgress,
-        Module: {
-                  onRuntimeInitialized: onInit,
-    },});
+## JS hacia Unity
+
+A modo de simplicidad, se hace global la variable de _gameInstance_:
+
+```css
+window.gameInstance = UnityLoader.instantiate("gameContainer", "Build/Build.json",
+{
+    onProgress: UnityProgress, Module: { onRuntimeInitialized:
+onInit, },
+...
+});
 ```
 
-Además como se observa, se llama a la función *onInit* cuando la carga de la isntacia apenas finaliza.
+Como se observa, se llama a la función JS _onInit_ cuando finaliza la carga de la isntacia _gameInstance_, idicado mediante _onRuntimeInitialized_.
 
-Esta función contiene:
+Declaración de **onInit**:
+
 ```javascript
-function onInit(){
-    document.getElementById("flapImage").addEventListener('mousedown',function()
-    {
-        window.gameInstance.SendMessage("Bird","DoFlap");
+function onInit() {
+  document
+    .getElementById("flapImage")
+    .addEventListener("mousedown", function() {
+      window.gameInstance.SendMessage("Bird", "DoFlap");
     });
 }
 ```
 
-Esto es un ejemplo sencillo para obtener el elemento que contiene la llamada a la función en Unity:
+Se agrega un evento JS para ejecutar el código:
+
 ```javascript
         document.getElementById("flapImage").addEventListener('mousedown',function()
 ```
 
-Sin embargo, esta es la linea importante ya que realiza la llamada a un método de una clase en C#:
-```javascript
-        window.gameInstance.SendMessage("Bird","DoFlap");
-```
-Esto signigfica que ejecute el método *DoFlap* de la clase *Bird*. En caso de que se desea enviar un parámetro, sería:
+Luego, la linea de código que realiza la llamada a un método de una clase en C# es:
 
 ```javascript
-        window.gameInstance.SendMessage("Bird","DoFlap","stringValue");
+window.gameInstance.SendMessage("Bird", "DoFlap");
+```
+
+Con esto se está diciendo que ejecute el método _DoFlap_ de la clase _Bird_.
+
+En caso de que se desee enviar un parámetro, sería:
+
+```javascript
+window.gameInstance.SendMessage("Bird", "DoFlap", "stringValue");
+window.gameInstance.SendMessage("Bird", "DoFlap", 1);
+...
 ```
 
 ## Prueba el juego
+
 [Aquí](https://maurichamorro.github.io/UnityWebGLInteractBrowserTest/) podrás probar el juego.
 
-El *bóton* html "Flap" es que realizar la llamada desde *JS a Unity*.
+El _bóton html_ **"Flap"** es que realizar la llamada desde _JS a Unity_.
 
-Cuando muere y revive el pájaro, *Unity llama a funciones de JS* para cambiar el *background* del html.
+Cuando muere y revive el pájaro, _Unity llama a funciones de JS_ para cambiar el _background_ del _html_.
+
 ## Conclusión
-WebAssembly es una interesante y poderosa herramienta que potencia el desarrollo web. 
+
+[**WebAssembly**](https://blogs.unity3d.com/2018/08/15/webassembly-is-here/) es una interesante y poderosa herramienta que potencia el desarrollo web.
 
 Desde mi punto de vista esta tecnología tiene mucho futuro por delante.
 
+El proyecto esta completo para estudiarlo más a fondo.
+
 ## Contáctame
-Puedes escribirme a mi email __mmchamoo@gmail.com__ o agregarme a [LinkedIn](https://www.linkedin.com/in/mauricio-manuel-chamorro).
+
+Puedes escribirme a mi email **mmchamoo@gmail.com** o agregarme a [**LinkedIn**](https://www.linkedin.com/in/mauricio-manuel-chamorro).
