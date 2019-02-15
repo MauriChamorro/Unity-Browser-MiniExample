@@ -6,6 +6,7 @@
 !Playable/Build
 [Bb]uilds/
 [Ll]ogs/
+ProjectSettings/
 
 # Never ignore Asset meta data
 ![Aa]ssets/**/*.meta
