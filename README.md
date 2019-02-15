@@ -8,7 +8,7 @@ Para ello se utilizó un juego completo simple [_Flappy Bird Style Example Game_
 
 ## Unity hacia JS
 
-Para lograr esta comunicación se debe crear una carpeta **Assets/Plugins** y destro de esta un **archivo.jslib** que contrendrá el código JS como libreria.
+Para lograr esta comunicación se debe crear una carpeta **Assets/Plugins** y dentro de esta un **archivo.jslib** que contrendrá el código JS como libreria.
 
 Todo el código JS debe estar contendido dentro de una firma tal como:
 
@@ -32,7 +32,7 @@ mergeInto(LibraryManager.library, {
 }
 ```
 
-Por último se llama desde Unity por ualquier **clase C#**. Para ello declaramos una _variable_ como acceso a la etiqueta externa JS previamente definida:
+Por último se llama desde Unity desde cualquier **clase C#**. Para ello declaramos una _variable_ como acceso a la etiqueta externa JS previamente definida:
 
 ```c#
  #region JS_IMPORT
@@ -63,7 +63,7 @@ Con esto ya es posible utilizarla en cualquier parte del código C# _\*dentro de
 
 ## JS hacia Unity
 
-A modo de simplicidad, se hace global la variable de _gameInstance_:
+A modo de simplicidad, se hace global la variable _gameInstance_:
 
 ```css
 window.gameInstance = UnityLoader.instantiate("gameContainer", "Build/Build.json",
@@ -74,7 +74,7 @@ onInit, },
 });
 ```
 
-Como se observa, se llama a la función JS _onInit_ cuando finaliza la carga de la isntacia _gameInstance_, idicado mediante _onRuntimeInitialized_.
+Como se observa, se llama a la función JS _onInit_ cuando finaliza la carga de la isntacia _gameInstance_, indicado mediante _onRuntimeInitialized_.
 
 Declaración de **onInit**:
 
@@ -114,9 +114,9 @@ window.gameInstance.SendMessage("Bird", "DoFlap", 1);
 
 [Aquí](https://maurichamorro.github.io/UnityWebGLInteractBrowserTest/) podrás probar el juego.
 
-El _bóton html_ **"Flap"** es que realizar la llamada desde _JS a Unity_.
+El _bóton html_ **Flap** es el que realizar la llamada desde _JS a Unity_.
 
-Cuando muere y revive el pájaro, _Unity llama a funciones de JS_ para cambiar el _background_ del _html_.
+Cuando el pájaro muere y revive, _Unity llama a funciones de JS_ para cambiar el _background_ del _html_.
 
 ## Conclusión
 
